@@ -151,4 +151,107 @@ WBITT Network MultiTool (with NGINX) - multitool-deployment-5df94f5576-k4kgg - 1
 
 ---
 
+## Задание 2. Создать Service и обеспечить доступ к приложениям снаружи кластера
+   1. Создать отдельный Service приложения из Задания 1 с возможностью доступа снаружи кластера к nginx, используя тип NodePort.
+   2. Продемонстрировать доступ с помощью браузера или curl с локального компьютера.
+   3. Предоставить манифест и Service в решении, а также скриншоты или вывод команды п.2.
+
+## Ответ:
+
+# Решение Задания 2: Доступ к приложению снаружи кластера (NodePort)
+
+## Описание задачи
+1. Создать Service типа `NodePort` для приложения Nginx, развернутого в Задании 1.
+2. Продемонстрировать доступ к приложению снаружи кластера через внешний IP узла и назначенный порт.
+
+---
+
+## 1. Манифест Service (`nginx-nodeport-service.yaml`)
+
+Для обеспечения доступа извне был создан сервис с типом `NodePort`, сопоставленный с метками пода Nginx.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-nodeport-service
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+```
+
+---
+
+## 2. Команды развертывания и получение данных для доступа
+
+Применяем манифест и определяем внешний IP-адрес узла кластера:
+
+```bash
+# Применение манифеста
+cloudshell-user:~$ kubectl apply -f nginx-nodeport-service.yaml
+service/nginx-nodeport-service created
+
+# Проверка порта сервиса
+cloudshell-user:~$ kubectl get svc nginx-nodeport-service
+NAME                     TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+nginx-nodeport-service   NodePort   10.96.160.6    <none>        80:30080/TCP   20s
+
+# Определение внешнего IP узла
+cloudshell-user:~$ kubectl get nodes -o wide
+NAME                        STATUS   ROLES    AGE    INTERNAL-IP   EXTERNAL-IP       ...
+cl1jfjbjjp9qablofb5-onef    Ready    <none>   6h29m  10.127.0.4    158.160.212.128   ...
+```
+
+<img width="1920" height="1080" alt="Снимок экрана (2725)" src="https://github.com/user-attachments/assets/953b1003-e912-4240-b254-87166c4b9051" />
+
+
+---
+
+## 3. Проверка доступа снаружи кластера
+
+Проверка выполнялась с локальной машины (VirtualBox) с использованием утилиты `curl` и веб-браузера.
+
+### 3.1. Проверка через curl:
+```bash
+vm1@vm1-VirtualBox:~$ curl http://158.160.212.128:30080
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+...
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and working.</p>
+...
+</body>
+</html>
+```
+
+### 3.2. Проверка через веб-браузер:
+Доступ был получен по адресу: `http://158.160.212.128:30080`
+
+---
+<img width="1920" height="1080" alt="Снимок экрана (2726)" src="https://github.com/user-attachments/assets/49a4bf8e-492a-4785-aa17-580696fc880d" />
+
+<img width="1920" height="1080" alt="Снимок экрана (2727)" src="https://github.com/user-attachments/assets/be648b98-03e7-457c-96f0-166046c60c82" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
