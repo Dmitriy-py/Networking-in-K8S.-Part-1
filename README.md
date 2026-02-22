@@ -112,6 +112,8 @@ spec:
       targetPort: 8080
 ```
 
+<img width="1920" height="1080" alt="Снимок экрана (2723)" src="https://github.com/user-attachments/assets/74e896e5-c946-407b-9195-444019b75d1f" />
+
 ---
 
 ## 3. Проверка сетевой связности
@@ -144,7 +146,9 @@ bash-5.1# curl http://multitool-service:9002
 WBITT Network MultiTool (with NGINX) - multitool-deployment-5df94f5576-k4kgg - 10.112.128.69 - HTTP: 8080 , HTTPS: 443
 ```
 
+<img width="1920" height="1080" alt="Снимок экрана (2722)" src="https://github.com/user-attachments/assets/119b0e33-6b7c-4e05-a49a-02547fc90149" />
+
+
 ---
 
-## Вывод
-Задание выполнено. Настроены два независимых Deployment и соответствующих им Service. Сетевая связность проверена: трафик успешно перенаправляется на нужные порты контейнеров (`9001 -> 80` и `9002 -> 8080`).
+
